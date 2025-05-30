@@ -84,7 +84,7 @@ export default function CountryQuiz() {
   const [messageBoxContent, setMessageBoxContent] = useState("")
   useEffect(() => {
     fetchNewQuizCountry()
-  }, []) 
+  }, [])
 
   // Function to fetch a new random country for the quiz
   const fetchNewQuizCountry = async () => {
@@ -187,7 +187,7 @@ export default function CountryQuiz() {
                    hover:from-purple-600 hover:to-indigo-700 hover:shadow-xl cursor-pointer 
                    transition duration-300 ease-in-out transform hover:scale-105"
       >
-        Get a random country for quiz!
+        Click here to get a random country for the quiz!
       </button>
       <div className="text-7xl sm:text-9xl font-bold text-gray-900 mt-8 mb-8">
         {/* Display flag or capital based on quiz type */}
@@ -210,18 +210,18 @@ export default function CountryQuiz() {
         <button
           onClick={handleQuizGuess}
           className="flex-1 p-6 sm:p-10 border-4 border-black rounded-lg shadow-lg 
-                     bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold text-xl sm:text-2xl
-                     hover:from-green-600 hover:to-teal-700 hover:shadow-xl cursor-pointer 
-                     transition duration-300 ease-in-out transform hover:scale-105"
+                     bg-green-500 text-white font-bold text-xl sm:text-2xl
+                     hover:bg-green-700 cursor-pointer 
+                     transform hover:scale-105"
         >
           Test your guess!
         </button>
         <button
           onClick={handleGiveUp}
           className="flex-1 p-6 sm:p-10 border-4 border-black rounded-lg shadow-lg 
-                     bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold text-xl sm:text-2xl
-                     hover:from-red-600 hover:to-rose-700 hover:shadow-xl cursor-pointer 
-                     transition duration-300 ease-in-out transform hover:scale-105"
+                     bg-red-500 text-white font-bold text-xl sm:text-2xl
+                     hover:red-700 cursor-pointer 
+                     transform hover:scale-105"
         >
           Give up!
         </button>
