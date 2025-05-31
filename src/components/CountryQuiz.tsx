@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import type { CountryData } from "../types" // Using type-only import as discussed
 
 // MessageBox Component: Replaces alert() for user feedback
@@ -76,20 +76,30 @@ const CorrectAnimationBox: React.FC<CorrectAnimationBoxProps> = ({ show }) => {
 
 export default function CountryQuiz() {
   const [quizData, setQuizData] = useState<CountryData | null>(null)
-  const [quizType, setQuizType] = useState<"flags" | "capitals">("flags") // Explicitly type quizType
+  const [quizType, setQuizType] = useState<"flags" | "capitals">("flags")
+  const [region, setRegion] = useState("All")
   const [quizGuess, setQuizGuess] = useState("")
   const [score, setScore] = useState(0)
   const [showCorrectAnimation, setShowCorrectAnimation] = useState(false)
   const [showMessageBox, setShowMessageBox] = useState(false)
   const [messageBoxContent, setMessageBoxContent] = useState("")
+  const [dropdown, setDropdown] = useState(false)
   useEffect(() => {
     fetchNewQuizCountry()
-  }, [])
-
-  // Function to fetch a new random country for the quiz
+  }, [region])
   const fetchNewQuizCountry = async () => {
     try {
-      const response = await fetch(`https://restcountries.com/v3.1/all`)
+      const regionLowercase = region.toLowerCase()
+      let response
+      if (regionLowercase == "all") {
+        response = await fetch(
+          `https://restcountries.com/v3.1/${regionLowercase}`
+        )
+      } else {
+        response = await fetch(
+          `https://restcountries.com/v3.1/region/${regionLowercase}`
+        )
+      }
       if (!response.ok) {
         throw new Error("Failed to fetch countries for quiz")
       }
@@ -168,16 +178,89 @@ export default function CountryQuiz() {
                      transition duration-300 ease-in-out transform hover:scale-105"
         >
           {quizType.charAt(0).toUpperCase() + quizType.slice(1)}{" "}
-          {/* Capitalize first letter */}
+        </p>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-5 sm:gap-10 items-center justify-center">
+        <div className="text-3xl font-bold text-gray-700">
+          Region (click to change):
+        </div>
+        <p>
+          {dropdown ? (
+            <div
+              className="text-3xl p-4 rounded-lg bg-blue-400 text-white 
+                         cursor-pointer flex flex-col gap-10"
+            >
+              <div
+                className="border-black border-4 text-center bg-blue-300
+                           hover:bg-blue-700 hover:scale-110"
+                onClick={() => {
+                  setRegion("Asia")
+                  setDropdown(!dropdown)
+                }}
+              >
+                Asia
+              </div>
+              <div
+                className="border-black border-4 text-center bg-blue-300
+                           hover:bg-blue-700 hover:scale-110"
+                onClick={() => {
+                  setRegion("Africa")
+                  setDropdown(!dropdown)
+                }}
+              >
+                Africa
+              </div>
+              <div
+                className="border-black border-4 text-center bg-blue-300
+                           hover:bg-blue-700 hover:scale-110"
+                onClick={() => {
+                  setRegion("Americas")
+                  setDropdown(!dropdown)
+                }}
+              >
+                Americas
+              </div>
+              <div
+                className="border-black border-4 text-center bg-blue-300
+                           hover:bg-blue-700 hover:scale-110"
+                onClick={() => {
+                  setRegion("Europe")
+                  setDropdown(!dropdown)
+                }}
+              >
+                Europe
+              </div>
+              <div
+                className="border-black border-4 text-center bg-blue-300
+                           hover:bg-blue-700 hover:scale-110"
+                onClick={() => {
+                  setRegion("Oceania")
+                  setDropdown(!dropdown)
+                }}
+              >
+                Oceania
+              </div>
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                setDropdown(!dropdown)
+              }}
+              className="text-3xl p-4 rounded-lg bg-blue-400 text-white 
+                     hover:bg-blue-600 cursor-pointer hover:scale-105"
+            >
+              {region}
+            </div>
+          )}
         </p>
       </div>
       {quizType === "flags" ? (
         <div className="text-xl text-gray-700">
-          Testing your country flag knowledge!
+          Testing your {region == "All" ? "" : region} flag knowledge!
         </div>
       ) : (
         <div className="text-xl text-gray-700">
-          Testing your country capital city knowledge!
+          Testing your {region == "All" ? "" : region} capital city knowledge!
         </div>
       )}
       <button
@@ -190,9 +273,7 @@ export default function CountryQuiz() {
         Click here to get a random country for the quiz!
       </button>
       <div className="text-7xl sm:text-9xl font-bold text-gray-900 mt-8 mb-8">
-        {/* Display flag or capital based on quiz type */}
         {quizType === "flags" ? quizData?.flag : quizData?.capital?.[0]}
-        {/* Fallback for capital if it's undefined or empty */}
         {quizType === "capitals" && !quizData?.capital?.[0] && quizData && (
           <span className="text-xl text-red-500">
             No capital data available.
